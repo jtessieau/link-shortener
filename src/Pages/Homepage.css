@@ -4,3 +4,17 @@ code {
     background-color: lightgray;
     padding: 1rem 1rem;
 }
+
+#start-now {
+    background-color: aqua;
+    border-radius: 0.5rem;
+    padding: 1.3rem 2rem;
+    display: block;
+    width: fit-content;
+    margin: auto;
+    margin-top: 4rem;
+    text-decoration: none;
+    font-size: 1.3rem;
+    color: black;
+    font-weight: bold;
+}

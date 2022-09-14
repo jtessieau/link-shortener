@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Homepage.css";
 
 export default function Homepage() {
@@ -15,6 +16,10 @@ export default function Homepage() {
                 became
                 <code> http://localhost/HoxFoBc3fd</code>
             </p>
+
+            <Link to='/dashboard' id='start-now'>
+                Start Now
+            </Link>
         </>
     );
 }

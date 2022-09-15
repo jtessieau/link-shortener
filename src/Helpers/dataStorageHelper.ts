@@ -1,18 +1,26 @@
 import { ShortUrl } from "../Types/ShortUrl.type";
 
-function storeUrl(shortUrl: ShortUrl): void {
-    const urlsArray = getAllUrls();
-    urlsArray.push(shortUrl);
+const LS_URLS: string = "URLS";
 
-    storeUrlsArray(urlsArray);
+function storeUrl(shortUrl: ShortUrl): void {
+    const urlsArray = getUrlsArray();
+
+    const findUrl = getOneUrl(shortUrl.id);
+
+    if (findUrl === null) {
+        urlsArray.push(shortUrl);
+        storeUrlsArray(urlsArray);
+    } else {
+        throw new Error("An error occured please try again.");
+    }
 }
 
 function storeUrlsArray(urlsArray: ShortUrl[]) {
-    localStorage.setItem("URLS", JSON.stringify(urlsArray));
+    localStorage.setItem(LS_URLS, JSON.stringify(urlsArray));
 }
 
-function getAllUrls(): ShortUrl[] {
-    const urls = localStorage.getItem("URLS");
+function getUrlsArray(): ShortUrl[] {
+    const urls = localStorage.getItem(LS_URLS);
 
     if (urls) {
         return JSON.parse(urls);
@@ -22,14 +30,14 @@ function getAllUrls(): ShortUrl[] {
 }
 
 function getOneUrl(id: string): ShortUrl | null {
-    const urlsArray = getAllUrls();
+    const urlsArray = getUrlsArray();
     const shortUrl = urlsArray.find((el) => el.id === id);
 
     return shortUrl !== undefined ? shortUrl : null;
 }
 
 function deleteUrl(id: string): void {
-    const urlsArray = getAllUrls();
+    const urlsArray = getUrlsArray();
 
     if (urlsArray.length > 0) {
         const filteredUrlsArray = urlsArray.filter((el) => el.id !== id);
@@ -42,4 +50,4 @@ function deleteUrl(id: string): void {
     }
 }
 
-export { storeUrl, getAllUrls, getOneUrl, deleteUrl };
+export { storeUrl, getOneUrl, getUrlsArray, deleteUrl };

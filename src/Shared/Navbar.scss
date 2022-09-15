@@ -1,16 +1,24 @@
 .navbar {
-    background-color: aqua;
+    background-color: darkcyan;
     ul {
         list-style-type: none;
         margin: 0;
         padding: 0;
         display: flex;
+        max-width: calc(800px + 4rem);
+        margin: auto;
     }
-    li {
+    a {
+        display: inline-block;
+        text-decoration: none;
         padding: 1rem 2rem;
+        color: white;
+        font-size: 1.2xrem;
+        font-weight: bold;
 
         &:hover {
-            background-color: wheat;
+            background-color: azure;
+            color: darkcyan;
         }
     }
 }

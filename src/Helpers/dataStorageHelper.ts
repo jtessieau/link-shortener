@@ -1,59 +1,45 @@
 import { ShortUrl } from "../Types/ShortUrl.type";
 
-function store(shortUrl: ShortUrl): void {
-    const urls = localStorage.getItem("URLS");
-    let urlsArray: ShortUrl[] = [];
+function storeUrl(shortUrl: ShortUrl): void {
+    const urlsArray = getAllUrls();
+    urlsArray.push(shortUrl);
 
-    if (urls === null) {
-        urlsArray.push(shortUrl);
-    } else {
-        urlsArray = JSON.parse(urls);
-        urlsArray.push(shortUrl);
-    }
+    storeUrlsArray(urlsArray);
+}
 
+function storeUrlsArray(urlsArray: ShortUrl[]) {
     localStorage.setItem("URLS", JSON.stringify(urlsArray));
 }
 
-function list(): ShortUrl[] | null {
+function getAllUrls(): ShortUrl[] {
     const urls = localStorage.getItem("URLS");
 
     if (urls) {
         return JSON.parse(urls);
     } else {
-        console.log("no url");
-        return null;
+        return [];
     }
 }
 
-function get(id: string): ShortUrl | null {
-    const urls = localStorage.getItem("URLS");
-
-    if (urls === null) {
-        return null;
-    }
-
-    const urlsArray: ShortUrl[] = JSON.parse(urls);
+function getOneUrl(id: string): ShortUrl | null {
+    const urlsArray = getAllUrls();
     const shortUrl = urlsArray.find((el) => el.id === id);
 
     return shortUrl !== undefined ? shortUrl : null;
 }
 
 function deleteUrl(id: string): void {
-    const urls = localStorage.getItem("URLS");
+    const urlsArray = getAllUrls();
 
-    if (urls === null) {
-        return;
-    }
+    if (urlsArray.length > 0) {
+        const filteredUrlsArray = urlsArray.filter((el) => el.id !== id);
 
-    const urlsArray: ShortUrl[] = JSON.parse(urls);
-
-    const filteredUrlsArray = urlsArray.filter((el) => el.id !== id);
-
-    if (filteredUrlsArray.length > 0) {
-        localStorage.setItem("URLS", JSON.stringify(filteredUrlsArray));
-    } else {
-        localStorage.removeItem("URLS");
+        if (filteredUrlsArray.length > 0) {
+            storeUrlsArray(filteredUrlsArray);
+        } else {
+            localStorage.removeItem("URLS");
+        }
     }
 }
 
-export { store, list, get, deleteUrl };
+export { storeUrl, getAllUrls, getOneUrl, deleteUrl };

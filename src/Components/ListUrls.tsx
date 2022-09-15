@@ -1,15 +1,13 @@
 import { useState } from "react";
-import { deleteUrl, list } from "../Helpers/dataStorageHelper";
+import { deleteUrl, getAllUrls } from "../Helpers/dataStorageHelper";
 import { ShortUrl } from "../Types/ShortUrl.type";
 
 function ListUrls() {
-    const [urlsArray, setUrlsArray] = useState(list());
-
-    console.log("urlsArray: " + urlsArray);
+    const [urlsArray, setUrlsArray] = useState(getAllUrls());
 
     function handleDelete(id: string) {
         deleteUrl(id);
-        setUrlsArray(() => list());
+        setUrlsArray(() => getAllUrls());
     }
 
     function getLink(shortUrl: ShortUrl): string {

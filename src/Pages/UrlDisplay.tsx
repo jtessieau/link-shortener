@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { get } from "../Helpers/dataStorageHelper";
+import { getOneUrl } from "../Helpers/dataStorageHelper";
 import { ShortUrl } from "../Types/ShortUrl.type";
 
 type Props = {};
@@ -9,10 +9,10 @@ function UrlDisplay({}: Props) {
     let shortenedUrl: ShortUrl | null;
 
     if (typeof url === "string") {
-        shortenedUrl = get(url);
+        shortenedUrl = getOneUrl(url);
         if (shortenedUrl) {
             window.location.href = shortenedUrl?.url;
-            return "Waiting for redirection ....";
+            return <p>"Waiting for redirection ...."</p>;
         } else {
             return <h1>Invalid Link</h1>;
         }

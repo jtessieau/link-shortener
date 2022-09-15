@@ -1,6 +1,6 @@
 import { ShortUrl } from "../../Types/ShortUrl.type";
 import ShortUniqueId from "short-unique-id";
-import { store } from "../../Helpers/dataStorageHelper";
+import { storeUrl } from "../../Helpers/dataStorageHelper";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -25,7 +25,7 @@ function createShortLink() {
                     descritpion: url.origin,
                 };
 
-                store(shortUrl);
+                storeUrl(shortUrl);
                 navigate("/dashboard");
             } catch (err) {
                 if (err instanceof TypeError) {

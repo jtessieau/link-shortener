@@ -1,12 +1,15 @@
 import { ShortUrl } from "../../Types/ShortUrl.type";
 import ShortUniqueId from "short-unique-id";
-import { storeUrl } from "../../Helpers/dataStorageHelper";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import IDataStorage from "../../Helpers/IDataStorage";
+import LocalDataStorage from "../../Helpers/LocalDataStorage";
 
 function createShortLink() {
     const navigate = useNavigate();
     const [error, setError] = useState("");
+    const dataStorage: IDataStorage = new LocalDataStorage();
+
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
@@ -25,7 +28,7 @@ function createShortLink() {
                     descritpion: url.origin,
                 };
 
-                storeUrl(shortUrl);
+                dataStorage.storeUrl(shortUrl);
                 navigate("/dashboard");
             } catch (err) {
                 if (err instanceof TypeError) {

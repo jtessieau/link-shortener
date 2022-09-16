@@ -1,50 +1,42 @@
 import { useState } from "react";
-import { deleteUrl, getUrlsArray } from "../Helpers/dataStorageHelper";
+import LocalDataStorage from "../Helpers/LocalDataStorage";
+import IDataStorage from "../Helpers/IDataStorage";
 import { ShortUrl } from "../Types/ShortUrl.type";
 
 function ListUrls() {
-    const [urlsArray, setUrlsArray] = useState(getUrlsArray());
+    const dataStorage: IDataStorage = new LocalDataStorage();
+    const [urlsArray, setUrlsArray] = useState(dataStorage.getUrlsArray());
 
-    function handleDelete(id: string) {
-        deleteUrl(id);
-        setUrlsArray(() => getUrlsArray());
-    }
+    const urlGenerator = (shortUrl: ShortUrl) => {
+        return window.location.origin + "/" + shortUrl.id;
+    };
 
-    function getLink(shortUrl: ShortUrl): string {
-        return "http://" + window.location.host + "/" + shortUrl.id;
-    }
+    const handleDelete = (shortUrl: ShortUrl) => {
+        dataStorage.deleteUrl(shortUrl);
+    };
+    const handleCopy = (shortUrl: ShortUrl) => {
+        navigator.clipboard.writeText(urlGenerator(shortUrl));
+    };
 
-    if (urlsArray !== null) {
+    console.log(urlsArray);
+
+    if (urlsArray.length > 0) {
         return (
             <>
-                <h1>Urls List:</h1>
+                <h1>List urls:</h1>
                 <ul>
                     {urlsArray.map((shortUrl) => {
-                        console.log(shortUrl);
                         return (
                             <li key={shortUrl.id}>
-                                <a href={getLink(shortUrl)} target='_blank'>
-                                    {shortUrl.descritpion}{" "}
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            handleDelete(shortUrl.id);
-                                        }}
-                                    >
-                                        delete
-                                    </button>
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            navigator.clipboard.writeText(
-                                                getLink(shortUrl)
-                                            );
-                                            alert("Link added to clipboard");
-                                        }}
-                                    >
-                                        Copy Link
-                                    </button>
+                                <a href={urlGenerator(shortUrl)}>
+                                    {shortUrl.descritpion}
                                 </a>
+                                <button onClick={() => handleDelete(shortUrl)}>
+                                    Delete
+                                </button>
+                                <button onClick={() => handleCopy(shortUrl)}>
+                                    Copy Url
+                                </button>
                             </li>
                         );
                     })}
@@ -52,11 +44,7 @@ function ListUrls() {
             </>
         );
     } else {
-        return (
-            <p>
-                <strong>Please create your first short url</strong>
-            </p>
-        );
+        return <p>No shortened urls stored.</p>;
     }
 }
 export default ListUrls;

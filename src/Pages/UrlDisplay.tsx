@@ -1,15 +1,16 @@
 import { useParams } from "react-router-dom";
-import { getOneUrl } from "../Helpers/dataStorageHelper";
+import IDataStorage from "../Helpers/IDataStorage";
+import LocalDataStorage from "../Helpers/LocalDataStorage";
 import { ShortUrl } from "../Types/ShortUrl.type";
 
-type Props = {};
-function UrlDisplay({}: Props) {
+function UrlDisplay() {
     const { url } = useParams();
+    const dataStorage: IDataStorage = new LocalDataStorage();
 
     let shortenedUrl: ShortUrl | null;
 
     if (typeof url === "string") {
-        shortenedUrl = getOneUrl(url);
+        shortenedUrl = dataStorage.getOneUrl(url);
         if (shortenedUrl) {
             window.location.href = shortenedUrl?.url;
             return <p>"Waiting for redirection ...."</p>;

@@ -12,6 +12,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
+    "react-toastify": "^9.0.8",
     "short-unique-id": "^4.4.4"
   },
   "devDependencies": {

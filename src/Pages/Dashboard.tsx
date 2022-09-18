@@ -1,13 +1,19 @@
-import { Link } from "react-router-dom";
 import ListUrls from "../Components/ListUrls";
 import { ToastContainer } from "react-toastify";
+import ShortUrlForm from "../Components/ShortUrlForm";
+import { useState } from "react";
+import IDataStorage from "../Helpers/IDataStorage";
 
-export default function Dashboard() {
+type Props = {
+    DataStorage: IDataStorage;
+};
+export default function Dashboard({ DataStorage }: Props) {
+    const [urls, setUrls] = useState([]);
     return (
         <>
             <h1>Dashboard</h1>
-            <Link to='create'>Create a new Short Link</Link>
-            <ListUrls />
+            <ShortUrlForm setUrls={setUrls} DataStorage={DataStorage} />
+            <ListUrls urls={urls} setUrls={setUrls} DataStorage={DataStorage} />
             <ToastContainer />
         </>
     );

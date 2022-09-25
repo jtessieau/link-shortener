@@ -1,6 +1,6 @@
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import IDataStorage from "../Helpers/IDataStorage";
-import { ShortUrl } from "../Types/ShortUrl.type";
 
 type Props = {
     DataStorage: IDataStorage;
@@ -8,18 +8,27 @@ type Props = {
 function UrlDisplay({ DataStorage }: Props) {
     const { url } = useParams();
 
-    let shortenedUrl: ShortUrl | null;
+    const [isUrlValid, setIsUrlValid] = useState(true);
 
-    if (typeof url === "string") {
-        shortenedUrl = DataStorage.getOneUrl(url);
-        if (shortenedUrl) {
-            window.location.href = shortenedUrl?.url;
-            return <p>"Waiting for redirection ...."</p>;
+    useEffect(() => {
+        if (typeof url === "string") {
+            DataStorage.getOneUrl(url).then((shortUrl) => {
+                if (shortUrl) {
+                    window.location.href = shortUrl.url;
+                    setIsUrlValid(true);
+                } else {
+                    setIsUrlValid(false);
+                }
+            });
         } else {
-            return <h1>Invalid Link</h1>;
+            setIsUrlValid(false);
         }
+    }, []);
+
+    if (isUrlValid) {
+        return <p>"Waiting for redirection ...."</p>;
     } else {
-        return <h1>Oups, something wrong happen...</h1>;
+        return <h1>Sorry, Invalid Link</h1>;
     }
 }
 export default UrlDisplay;

@@ -8,7 +8,7 @@ type Props = { urls: ShortUrl[]; setUrls: Function; DataStorage: IDataStorage };
 
 function ListUrls({ urls, setUrls, DataStorage }: Props) {
     useEffect(() => {
-        setUrls(DataStorage.getUrlsArray());
+        DataStorage.getUrlsArray().then((urlsArray) => setUrls(urlsArray));
     }, []);
 
     const urlGenerator = (shortUrl: ShortUrl) => {
@@ -16,11 +16,14 @@ function ListUrls({ urls, setUrls, DataStorage }: Props) {
     };
 
     const handleDelete = (shortUrl: ShortUrl) => {
-        DataStorage.deleteUrl(shortUrl);
-        setUrls(DataStorage.getUrlsArray());
-        toast.warning(shortUrl.id + " has been deleted", {
-            autoClose: 2000,
-            hideProgressBar: true,
+        DataStorage.deleteUrl(shortUrl).then(() => {
+            toast.warning(shortUrl.id + " has been deleted", {
+                autoClose: 2000,
+                hideProgressBar: true,
+            });
+            DataStorage.getUrlsArray().then((urlsArray) => {
+                setUrls(urlsArray);
+            });
         });
     };
     const handleCopy = (shortUrl: ShortUrl) => {
@@ -39,7 +42,10 @@ function ListUrls({ urls, setUrls, DataStorage }: Props) {
                     {urls.map((shortUrl) => {
                         return (
                             <li key={shortUrl.id}>
-                                <a href={urlGenerator(shortUrl)}>
+                                <a
+                                    href={urlGenerator(shortUrl)}
+                                    target='_blank'
+                                >
                                     {shortUrl.descritpion}
                                 </a>
                                 <button onClick={() => handleDelete(shortUrl)}>

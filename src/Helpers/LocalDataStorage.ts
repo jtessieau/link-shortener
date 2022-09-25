@@ -8,12 +8,10 @@ export default class LocalDataStorage implements IDataStorage {
         localStorage.setItem(this.LS_URLS, JSON.stringify(urlsArray));
     }
 
-    public storeUrl(shortUrl: ShortUrl): void {
-        const urlsArray = this.getUrlsArray();
-
-        const findUrl = this.getOneUrl(shortUrl.id);
-
-        if (findUrl === null) {
+    public async storeUrl(shortUrl: ShortUrl): Promise<void> {
+        const foundUrl = await this.getOneUrl(shortUrl.id);
+        if (foundUrl === null) {
+            const urlsArray = await this.getUrlsArray();
             urlsArray.push(shortUrl);
             this.storeUrlsArray(urlsArray);
         } else {
@@ -21,22 +19,21 @@ export default class LocalDataStorage implements IDataStorage {
         }
     }
 
-    public getOneUrl(id: string): ShortUrl | null {
-        const urls = this.getUrlsArray();
-
-        const urlFound = urls.find((el) => el.id === id);
+    public async getOneUrl(id: string): Promise<ShortUrl | null> {
+        const urlsArray = await this.getUrlsArray();
+        const urlFound = urlsArray.find((el) => el.id === id);
         return urlFound === undefined ? null : urlFound;
     }
 
-    public getUrlsArray(): ShortUrl[] {
+    public async getUrlsArray(): Promise<ShortUrl[]> {
         const urls = localStorage.getItem(this.LS_URLS);
         return urls ? JSON.parse(urls) : [];
     }
 
-    public deleteUrl(shortUrl: ShortUrl): void {
-        const urlsArray = this.getUrlsArray();
+    public async deleteUrl(shortUrl: ShortUrl): Promise<void> {
+        const urlsArray = await this.getUrlsArray();
 
-        if (urlsArray.length > 0) {
+        if (urlsArray !== null) {
             const filteredUrlsArray = urlsArray.filter(
                 (el) => el.id !== shortUrl.id
             );

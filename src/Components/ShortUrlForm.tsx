@@ -28,12 +28,17 @@ export default function ShortUrlForm({ setUrls, DataStorage }: Props) {
                     url: url.href,
                 };
 
-                DataStorage.storeUrl(shortUrl);
-                setUrls(DataStorage.getUrlsArray());
-                urlInput.value = "";
-                toast.info(shortUrl.url + " added to storage", {
-                    hideProgressBar: true,
+                DataStorage.storeUrl(shortUrl).then(() => {
+                    DataStorage.getUrlsArray().then((urlsArray) => {
+                        console.log(urlsArray);
+                        setUrls(urlsArray);
+                        toast.info(shortUrl.url + "added to the list", {
+                            hideProgressBar: true,
+                        });
+                    });
                 });
+
+                urlInput.value = "";
             } catch (err) {}
         }
     };
